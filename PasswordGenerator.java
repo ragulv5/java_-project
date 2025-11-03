@@ -1,52 +1,106 @@
-import java.security.NoSuchAlgorithmException;
+import java.util.Scanner;
 import java.security.SecureRandom;
-import java.util.Random;
 
 public class PasswordGenerator {
-    private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
-    private static final String DIGITS = "0123456789";
-    private static final String SPECIAL = "!@#$%^&*()-_=+[]{}|;:'\",.<>?";
 
-    public static String generatePassword(int length, boolean useUpper, boolean useLower, boolean useDigits, boolean useSpecial) {
-        if (length <= 0) {
-            throw new IllegalArgumentException("Password length must be greater than 0");
-        }
+    // Arrays for characters
+    static char[] uppercase = {
+        'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+    };
 
-        StringBuilder characters = new StringBuilder();
-        if (useUpper) characters.append(UPPER);
-        if (useLower) characters.append(LOWER);
-        if (useDigits) characters.append(DIGITS);
-        if (useSpecial) characters.append(SPECIAL);
+    static char[] lowercase = {
+        'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'
+    };
 
-        if (characters.length() == 0) {
-            throw new IllegalArgumentException("At least one character type (upper, lower, digits, special) must be selected");
-        }
+    static char[] digits = {
+        '0','1','2','3','4','5','6','7','8','9'
+    };
 
-        Random random;
-        try {
-            random = SecureRandom.getInstanceStrong(); // Strong cryptographic random number generator
-        } catch (NoSuchAlgorithmException e) {
-            random = new SecureRandom();
-        }
-
-        StringBuilder password = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            int randomIndex = random.nextInt(characters.length());
-            password.append(characters.charAt(randomIndex));
-        }
-
-        return password.toString();
-    }
+    static char[] special = {
+        '!','@','#','$','%','^','&','*','(',')','-','_','+','=','?'
+    };
 
     public static void main(String[] args) {
-        int length = 12; // Change the desired password length
-        boolean useUpper = true;
-        boolean useLower = true;
-        boolean useDigits = true;
-        boolean useSpecial = true;
 
-        String password = generatePassword(length, useUpper, useLower, useDigits, useSpecial);
-        System.out.println("Generated Password: " + password);
+        Scanner sc = new Scanner(System.in);
+        SecureRandom random = new SecureRandom();
+
+        System.out.println("===== PASSWORD GENERATOR =====");
+        System.out.print("Enter password length: ");
+        int length = sc.nextInt();
+
+        System.out.print("Use uppercase letters? (true/false): ");
+        boolean useUpper = sc.nextBoolean();
+
+        System.out.print("Use lowercase letters? (true/false): ");
+        boolean useLower = sc.nextBoolean();
+
+        System.out.print("Use digits? (true/false): ");
+        boolean useDigits = sc.nextBoolean();
+
+        System.out.print("Use special characters? (true/false): ");
+        boolean useSpecial = sc.nextBoolean();
+
+        if (length <= 0) {
+            System.out.println("Password length must be greater than 0.");
+            return;
+        }
+
+        if (!useUpper && !useLower && !useDigits && !useSpecial) {
+            System.out.println("You must select at least one character type.");
+            return;
+        }
+
+        char[] password = new char[length];
+
+        // Guarantee at least one of each selected type
+        int index = 0;
+
+        if (useUpper) {
+            password[index++] = uppercase[random.nextInt(uppercase.length)];
+        }
+
+        if (useLower) {
+            password[index++] = lowercase[random.nextInt(lowercase.length)];
+        }
+
+        if (useDigits) {
+            password[index++] = digits[random.nextInt(digits.length)];
+        }
+
+        if (useSpecial) {
+            password[index++] = special[random.nextInt(special.length)];
+        }
+
+        // Fill the remaining password characters
+        for (int i = index; i < length; i++) {
+
+            int choice = random.nextInt(4); // select char type
+
+            if (choice == 0 && useUpper) {
+                password[i] = uppercase[random.nextInt(uppercase.length)];
+            }
+            else if (choice == 1 && useLower) {
+                password[i] = lowercase[random.nextInt(lowercase.length)];
+            }
+            else if (choice == 2 && useDigits) {
+                password[i] = digits[random.nextInt(digits.length)];
+            }
+            else if (choice == 3 && useSpecial) {
+                password[i] = special[random.nextInt(special.length)];
+            }
+            else {
+                i--; // try again if type not allowed
+            }
+        }
+
+        // Print final password
+        System.out.print("Generated Password: ");
+        for (char c : password) {
+            System.out.print(c);
+        }
+
+        System.out.println("\n================================");
+        sc.close();
     }
 }
