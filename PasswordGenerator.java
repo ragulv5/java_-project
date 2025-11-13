@@ -14,7 +14,7 @@ public class PasswordGenerator {
         Scanner sc = new Scanner(System.in);
         SecureRandom random = new SecureRandom();
 
-        System.out.println("===== PASSWORD GENERATOR =====");
+        System.out.println("============ PASSWORD GENERATOR ============");
 
         // Input length
         System.out.print("Enter password length: ");
@@ -36,34 +36,53 @@ public class PasswordGenerator {
         // Validate input
         if (length < 1) {
             System.out.println("Password length must be greater than 0!");
-            return;
+        return;
         }
 
         if (!useUpper && !useLower && !useDigits && !useSpecial) {
             System.out.println("You must select at least one character type!");
-            return;
+        return;
         }
 
         String selectedChars = "";
-        if (useUpper) selectedChars += upper;
-        if (useLower) selectedChars += lower;
-        if (useDigits) selectedChars += digits;
-        if (useSpecial) selectedChars += special;
+
+        if (useUpper) {
+            selectedChars += upper;
+        }
+        if (useLower) {
+            selectedChars += lower;
+        }
+        if (useDigits) {
+            selectedChars += digits;
+        }
+        if (useSpecial) {
+            selectedChars += special;
+        }
 
         char[] password = new char[length];
+
 
         // Ensure at least one of each selected type
         int index = 0;
 
-        if (useUpper) password[index++] = upper.charAt(random.nextInt(upper.length()));
-        if (useLower) password[index++] = lower.charAt(random.nextInt(lower.length()));
-        if (useDigits) password[index++] = digits.charAt(random.nextInt(digits.length()));
-        if (useSpecial) password[index++] = special.charAt(random.nextInt(special.length()));
+        if (useUpper) {
+        password[index++] = upper.charAt(random.nextInt(upper.length()));
+        }
+        if (useLower) {
+            password[index++] = lower.charAt(random.nextInt(lower.length()));
+        }
+        if (useDigits) {
+            password[index++] = digits.charAt(random.nextInt(digits.length()));
+        }
+        if (useSpecial) {
+            password[index++] = special.charAt(random.nextInt(special.length()));
+        }
 
         // Fill remaining characters
         for (int i = index; i < length; i++) {
             password[i] = selectedChars.charAt(random.nextInt(selectedChars.length()));
         }
+
 
         // Print password
         System.out.print("Generated Password: ");
@@ -71,7 +90,8 @@ public class PasswordGenerator {
             System.out.print(c);
         }
 
-        System.out.println("\n===============================");
+        System.out.println("\n============================================");
         sc.close();
     }
 }
+
